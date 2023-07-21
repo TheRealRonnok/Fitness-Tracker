@@ -1,4 +1,5 @@
-const express = require('express');
+// NOTE: use 'JOIN' in the getPublicRoutinesByActivity based on the activityId
+const express = require("express");
 const router = express.Router();
 
 // GET /api/routines

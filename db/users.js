@@ -2,21 +2,95 @@ const client = require("./client");
 
 // database functions
 
-// user functions
+// Create User function
 async function createUser({ username, password }) {
-  
+  try {
+    console.log("Inside createUser.");
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+        INSERT INTO users(username, password) 
+        VALUES($1, $2) 
+        ON CONFLICT (username) DO NOTHING 
+        RETURNING *;
+      `,
+      [username, password]
+    );
+
+    return user;
+  } catch (error) {
+    console.log("Error creating user.");
+    throw error;
+  }
 }
 
+// Get User function
 async function getUser({ username, password }) {
+  try {
+    console.log("Inside getUser.");
+    const { rows } = await client.query(`
+        SELECT Id, ${username}, ${password} FROM users;
+      `);
 
+    return rows;
+  } catch (error) {
+    console.log("Error getting User.");
+    throw error;
+  }
+  // This should be able to verify the password against the hashed password
 }
 
+// Get User By ID function
 async function getUserById(userId) {
+  try {
+    console.log("Inside getUserById.");
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+        SELECT id, username
+        FROM users
+        WHERE id=${userId}
+      `
+    );
 
+    if (!user) {
+      console.log("No User found - Inside getUserById.");
+      return null;
+    }
+
+    return user;
+  } catch (error) {
+    console.log("Error getting User By Id.");
+    throw error;
+  }
 }
 
+// Get User By Username function
 async function getUserByUsername(userName) {
+  try {
+    console.log("Inside getUserByUsername.");
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+        SELECT id, username
+        FROM users
+        WHERE username=${userName}
+      `
+    );
 
+    if (!user) {
+      console.log("No User found - Inside getUserByUsername.");
+      return null;
+    }
+
+    return user;
+  } catch (error) {
+    console.log("Error getting User By Username.");
+    throw error;
+  }
 }
 
 module.exports = {
@@ -24,4 +98,4 @@ module.exports = {
   getUser,
   getUserById,
   getUserByUsername,
-}
+};
