@@ -5,7 +5,11 @@ const client = require("./client");
 // Create User function
 async function createUser({ username, password }) {
   try {
-    console.log("Inside createUser.");
+    console.log(
+      "Inside createUser, Username and Password created: ",
+      username,
+      password
+    );
     const {
       rows: [user],
     } = await client.query(
@@ -29,11 +33,21 @@ async function createUser({ username, password }) {
 async function getUser({ username, password }) {
   try {
     console.log("Inside getUser.");
-    const { rows } = await client.query(`
-        SELECT Id, ${username}, ${password} FROM users;
-      `);
+    const { user } = await client.query(
+      `
+        SELECT * FROM users
+        WHERE username=$1
+        AND password=$2
+      `,
+      [username, password]
+    );
 
-    return rows;
+    if (!user) {
+      console.log("No user found - Inside getUser.");
+      return null;
+    }
+
+    return user;
   } catch (error) {
     console.log("Error getting User.");
     throw error;
