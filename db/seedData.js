@@ -19,7 +19,7 @@ async function dropTables() {
     console.log("Starting to drop tables...");
 
     await client.query(`
-      DROP TABLE IF EXISTS routineactivities;
+      DROP TABLE IF EXISTS "routine-activities";
       DROP TABLE IF EXISTS routines;
       DROP TABLE IF EXISTS activities;
       DROP TABLE IF EXISTS users;
@@ -140,7 +140,7 @@ async function createInitialActivities() {
 }
 
 async function createInitialRoutines() {
-  console.log("starting to create routines...");
+  console.log("Starting to create routines...");
 
   const routinesToCreate = [
     {
@@ -176,7 +176,7 @@ async function createInitialRoutines() {
 }
 
 async function createInitialRoutineActivities() {
-  console.log("starting to create routine_activities...");
+  console.log("Starting to create routine_activities...");
   const [bicepRoutine, chestRoutine, legRoutine, cardioRoutine] =
     await getRoutinesWithoutActivities();
   const [bicep1, bicep2, chest1, chest2, leg1, leg2, leg3] =
@@ -241,7 +241,7 @@ async function createInitialRoutineActivities() {
   const routineActivities = await Promise.all(
     routineActivitiesToCreate.map(addActivityToRoutine)
   );
-  console.log("routine_activities created: ", routineActivities);
+  console.log("Routine_activities created: ", routineActivities);
   console.log("Finished creating routine_activities!");
 }
 

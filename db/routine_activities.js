@@ -7,22 +7,24 @@ async function addActivityToRoutine({
   duration,
 }) {
   try {
+    // console.log("Inside addActivityToRoutine.");
+    const {
+      rows: [activity],
+    } = await client.query(
+      `
+        INSERT INTO "routine-activities"("routineId", "activityId", count, duration) 
+        VALUES($1, $2, $3, $4) 
+        RETURNING *;
+      `,
+      [routineId, activityId, count, duration]
+    );
+
     console.log(
       "Inside addActivityToRoutine, Activity created to Routine: ",
       routineId,
       activityId,
       count,
       duration
-    );
-    const {
-      rows: [activity],
-    } = await client.query(
-      `
-        INSERT INTO routineactivities(routineId, activityId, count, duration) 
-        VALUES($1, $2, $3, $4) 
-        RETURNING *;
-      `,
-      [routineId, activityId, count, duration]
     );
 
     return activity;
@@ -40,7 +42,7 @@ async function getRoutineActivityById(id) {
     } = await client.query(
       `
         SELECT *
-        FROM routineactivities
+        FROM "routine-activities"
         WHERE id=${id}
       `
     );
@@ -65,7 +67,7 @@ async function getRoutineActivitiesByRoutine({ id }) {
     } = await client.query(
       `
         SELECT *
-        FROM routineactivities
+        FROM "routine-activities"
         WHERE "routineId"=${id}
       `
     );
@@ -103,7 +105,7 @@ async function updateRoutineActivity({ id, ...fields }) {
       rows: [activity],
     } = await client.query(
       `
-        UPDATE routineactivities
+        UPDATE "routine-activities"
         SET ${setString}
         WHERE id=${id}
         RETURNING *;
@@ -124,7 +126,7 @@ async function destroyRoutineActivity(id) {
 
   try {
     const { routine } = await client.query(`
-        DELETE FROM routine-activities
+        DELETE FROM "routine-activities"
         WHERE id=${id}
       `);
 

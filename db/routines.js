@@ -2,14 +2,15 @@ const client = require("./client");
 
 async function createRoutine({ creatorId, isPublic, name, goal }) {
   try {
-    console.log("Inside createRoutine.");
+    console.log(
+      `Inside createRoutine. Routine to create: ${creatorId} ${isPublic} ${name} ${goal}`
+    );
     const {
       rows: [routine],
     } = await client.query(
       `
-        INSERT INTO routines("creatorId", "isPublic", name, goal) 
-        VALUES($1, $2, $3, $4) 
-        ON CONFLICT (name) DO NOTHING 
+        INSERT INTO routines ("creatorId", "IsPublic", name, goal) 
+        VALUES($1, $2, $3, $4)
         RETURNING *;
       `,
       [creatorId, isPublic, name, goal]

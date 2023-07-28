@@ -3,7 +3,7 @@ const client = require("./client");
 // database functions
 async function createActivity({ name, description }) {
   try {
-    console.log("Inside createActivity.");
+    // console.log("Inside createActivity.");
     const {
       rows: [activity],
     } = await client.query(
@@ -29,8 +29,10 @@ async function getAllActivities() {
     console.log("Inside getAllActivities.");
 
     const { rows } = await client.query(`
-        SELECT id, name, description FROM activities;
+        SELECT * FROM activities;
       `);
+
+    console.log("Get All Activities: " + rows);
 
     return rows;
   } catch (error) {
