@@ -48,6 +48,7 @@ async function getRoutineById(id) {
   }
 }
 
+// Need to add logic for 'Without Activities'
 async function getRoutinesWithoutActivities() {
   try {
     console.log("Inside getRoutinesWithoutActivities.");

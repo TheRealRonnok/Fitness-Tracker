@@ -28,18 +28,15 @@ async function getAllActivities() {
   try {
     console.log("Inside getAllActivities.");
 
-    const { rows } = await client.query(`
+    const { rows: activities } = await client.query(`
         SELECT * FROM activities;
       `);
 
-    console.log("Get All Activities: " + rows);
-
-    return rows;
+    return activities;
   } catch (error) {
     console.log("Error creating Activity.");
     throw error;
   }
-  // select and return an array of all activities
 }
 
 // Get Activity By Id function

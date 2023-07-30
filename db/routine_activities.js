@@ -20,7 +20,7 @@ async function addActivityToRoutine({
     );
 
     console.log(
-      "Inside addActivityToRoutine, Activity created to Routine: ",
+      "Inside addActivityToRoutine, Activity added to Routine: ",
       routineId,
       activityId,
       count,
@@ -29,7 +29,7 @@ async function addActivityToRoutine({
 
     return activity;
   } catch (error) {
-    console.log("Error creating user.");
+    console.log("Error adding activity to Routine-Activities.");
     throw error;
   }
 }
