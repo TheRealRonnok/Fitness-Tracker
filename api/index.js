@@ -1,11 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
+// GET /api/unknown
+router.get("/unknown", async (req, res, next) => {
+  console.log("Request to /api/unknown");
+  res.send({
+    message: 404,
+    content: "Error 404 - Page not found",
+  });
+});
+
 // GET /api/health
 router.get("/health", async (req, res, next) => {
   console.log("Request to /api/health");
   res.send({
-    content: "All systems go!",
+    message: "200",
+    content: "System running as expected",
   });
 });
 

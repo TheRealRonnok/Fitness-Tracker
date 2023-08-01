@@ -56,7 +56,7 @@ async function createTables() {
     await client.query(`
       CREATE TABLE routines (
       id SERIAL PRIMARY KEY,
-      "creatorId" INTEGER REFERENCES users(Id),
+      "creatorId" INTEGER REFERENCES users(id),
       "IsPublic" BOOLEAN DEFAULT false,
       name varchar(255) UNIQUE NOT NULL,
       goal TEXT NOT NULL
@@ -66,8 +66,8 @@ async function createTables() {
     await client.query(`
       CREATE TABLE "routine-activities" (
       id SERIAL PRIMARY KEY,
-      "routineId" INTEGER REFERENCES routines(Id),
-      "activityId" INTEGER REFERENCES activities(Id),
+      "routineId" INTEGER REFERENCES routines(id),
+      "activityId" INTEGER REFERENCES activities(id),
       duration INTEGER,
       count INTEGER
       );

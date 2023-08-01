@@ -49,7 +49,7 @@ async function getActivityById(id) {
       `
         SELECT id, name, description
         FROM activities
-        WHERE id=${id}
+        WHERE id=${id};
       `
     );
 
@@ -73,9 +73,9 @@ async function getActivityByName(name) {
       rows: [activity],
     } = await client.query(
       `
-        SELECT id, name, description
+        SELECT *
         FROM activities
-        WHERE name=${name}
+        WHERE name=${name};
       `
     );
 

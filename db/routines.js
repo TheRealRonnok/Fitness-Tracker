@@ -32,7 +32,7 @@ async function getRoutineById(id) {
       `
         SELECT *
         FROM routines
-        WHERE id=${id}
+        WHERE id=${id};
       `
     );
 
@@ -93,7 +93,7 @@ async function getAllPublicRoutines() {
 
     const { routine } = await client.query(`
         SELECT * FROM routines
-        WHERE "isPublic"=TRUE
+        WHERE "isPublic"=TRUE;
       `);
 
     if (!routine) {
@@ -114,7 +114,7 @@ async function getAllRoutinesByUser({ username }) {
 
     const { routine } = await client.query(`
         SELECT * FROM routines
-        WHERE username=${username}
+        WHERE username=${username};
       `);
 
     if (!routine) {
@@ -138,7 +138,7 @@ async function getPublicRoutinesByUser({ username }) {
     const { routine } = await client.query(`
         SELECT * FROM routines
         WHERE username=${username}
-        AND "isPublic"=TRUE
+        AND "isPublic"=TRUE;
       `);
 
     if (!routine) {
@@ -230,7 +230,7 @@ async function destroyRoutine(id) {
   try {
     const { routine } = await client.query(`
         DELETE FROM routines
-        WHERE id=${id}
+        WHERE id=${id};
       `);
 
     console.log("Successfully deleted routine.");

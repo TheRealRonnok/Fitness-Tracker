@@ -22,6 +22,8 @@ async function createUser({ username, password }) {
       [username, password]
     );
 
+    user.password = null;
+
     return user;
   } catch (error) {
     console.log("Error creating user.");
@@ -35,9 +37,10 @@ async function getUser({ username, password }) {
     console.log("Inside getUser.");
     const { user } = await client.query(
       `
-        SELECT * FROM users
+        SELECT *
+        FROM users
         WHERE username=$1
-        AND password=$2
+        AND password=$2;
       `,
       [username, password]
     );
@@ -46,6 +49,8 @@ async function getUser({ username, password }) {
       console.log("No user found - Inside getUser.");
       return null;
     }
+
+    user.password = null;
 
     return user;
   } catch (error) {
@@ -65,7 +70,7 @@ async function getUserById(userId) {
       `
         SELECT id, username
         FROM users
-        WHERE id=${userId}
+        WHERE id=${userId};
       `
     );
 
@@ -89,9 +94,9 @@ async function getUserByUsername(userName) {
       rows: [user],
     } = await client.query(
       `
-        SELECT id, username
+        SELECT *
         FROM users
-        WHERE username=${userName}
+        WHERE username=${userName};
       `
     );
 

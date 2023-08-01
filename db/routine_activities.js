@@ -43,7 +43,7 @@ async function getRoutineActivityById(id) {
       `
         SELECT *
         FROM "routine-activities"
-        WHERE id=${id}
+        WHERE id=${id};
       `
     );
 
@@ -62,13 +62,11 @@ async function getRoutineActivityById(id) {
 async function getRoutineActivitiesByRoutine({ id }) {
   try {
     console.log("Inside getRoutineActivityById.");
-    const {
-      rows: [routine],
-    } = await client.query(
+    const { rows: routine } = await client.query(
       `
         SELECT *
         FROM "routine-activities"
-        WHERE "routineId"=${id}
+        WHERE "routineId"=${id};
       `
     );
 
@@ -125,14 +123,22 @@ async function destroyRoutineActivity(id) {
   console.log("Inside destroyRoutineActivity.");
 
   try {
-    const { routine } = await client.query(`
-        DELETE FROM "routine-activities"
-        WHERE id=${id}
-      `);
+    // Delete Routine-Activity
+    await client.query(`
+      DELETE FROM "routine-activities"
+      WHERE id=${id};
+    `);
+
+    // Return Routine-Activity
+    const { routineActivity } = await client.query(`
+      SELECT *
+      FROM "routine-activities"
+      WHERE id=${id};
+    `);
 
     console.log("Successfully deleted Routine-Activity.");
 
-    return routine;
+    return routineActivity;
   } catch (error) {
     console.log("Error destroying Routine-Activity.");
     throw error;
