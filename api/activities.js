@@ -60,8 +60,8 @@ router.patch("/:activityId", async (req, res, next) => {
     if (updatedItem) {
       res.send({ updatedItem });
     }
-  } catch ({ name, message }) {
-    next({ name, message });
+  } catch (error) {
+    next(error);
   }
 });
 

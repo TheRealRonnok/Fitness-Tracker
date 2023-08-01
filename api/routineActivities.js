@@ -28,19 +28,20 @@ router.patch("/:routineActivityId", async (req, res, next) => {
     if (updatedActivity) {
       res.send({ updatedActivity });
     }
-  } catch ({ name, message }) {
-    next({ name, message });
+  } catch (error) {
+    next(error);
   }
 });
 
 // DELETE /api/routine_activities/:routineActivityId
 router.delete("/:routineActivityId", async (req, res, next) => {
   try {
-    // const result = await destroyRoutineActivity();
+    const { routineActivityId } = req.params;
+    const result = await destroyRoutineActivity(routineActivityId);
 
     res.send(result);
-  } catch ({ name, message }) {
-    next({ name, message });
+  } catch (error) {
+    next(error);
   }
 });
 
