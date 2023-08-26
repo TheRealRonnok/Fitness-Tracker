@@ -1,6 +1,7 @@
 // NOTE: use 'JOIN' in the getPublicRoutinesByActivity based on the activityId
 const express = require("express");
-const router = express.Router();
+const routinesRouter = express.Router();
+const { requireUser } = require("./utils");
 
 const {
   createRoutine,
@@ -11,7 +12,7 @@ const {
 } = require("../db");
 
 // GET /api/routines - Return a list of public routines, include the activities with them
-router.get("/api/routines", async (req, res, next) => {
+routinesRouter.get("/api/routines", async (req, res, next) => {
   try {
     const routines = await getAllPublicRoutines();
     res.send({ routines });
@@ -21,7 +22,7 @@ router.get("/api/routines", async (req, res, next) => {
 });
 
 // POST /api/routines - Create a new routine
-router.post("/", async (req, res, next) => {
+routinesRouter.post("/", requireUser, async (req, res, next) => {
   try {
     const newRoutine = await createRoutine(req.body);
 
@@ -34,7 +35,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // PATCH /api/routines/:routineId - Update a routine, notably change public/private, the name, or the goal
-router.patch("/:routineId", async (req, res, next) => {
+routinesRouter.patch("/:routineId", requireUser, async (req, res, next) => {
   const { isPublic, name, goal } = req.body;
   const patchedParams = {};
   // Update isPublic
@@ -67,7 +68,7 @@ router.patch("/:routineId", async (req, res, next) => {
 });
 
 // DELETE /api/routines/:routineId - Hard delete a routine. Make sure to delete all the routineActivities whose routine is the one being deleted.
-router.delete("/:routineId", async (req, res, next) => {
+routinesRouter.delete("/:routineId", async (req, res, next) => {
   let id = parseInt(req.params.routineId);
 
   try {
@@ -92,4 +93,4 @@ router.delete("/:routineId", async (req, res, next) => {
 
 // POST /api/routines/:routineId/activities - Attach a single activity to a routine. Prevent duplication on (routineId, activityId) pair.
 
-module.exports = router;
+module.exports = routinesRouter;

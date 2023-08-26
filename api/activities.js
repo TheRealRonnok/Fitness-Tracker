@@ -1,5 +1,6 @@
 const express = require("express");
-const router = express.Router();
+const activitiesRouter = express.Router();
+const { requireUser } = require("./utils");
 
 const {
   createActivity,
@@ -9,7 +10,7 @@ const {
 } = require("../db");
 
 // GET /api/activities/:activityId/routines
-router.get("/:activityId/routines", async (req, res, next) => {
+activitiesRouter.get("/:activityId/routines", async (req, res, next) => {
   try {
     const userRoutines = await getPublicRoutinesByActivity({
       id: parseInt(req.params.activityId),
@@ -22,7 +23,7 @@ router.get("/:activityId/routines", async (req, res, next) => {
 });
 
 // GET /api/activities
-router.get("/", async (req, res, next) => {
+activitiesRouter.get("/", async (req, res, next) => {
   try {
     const activities = await getAllActivities();
     res.send({ activities });
@@ -32,7 +33,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // POST /api/activities
-router.post("/", async (req, res, next) => {
+activitiesRouter.post("/", requireUser, async (req, res, next) => {
   try {
     const newActivity = await createActivity(req.body);
     res.send(newActivity);
@@ -42,7 +43,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // PATCH /api/activities/:activityId
-router.patch("/:activityId", async (req, res, next) => {
+activitiesRouter.patch("/:activityId", requireUser, async (req, res, next) => {
   const { name, description } = req.body;
   const updateFields = {};
   updateFields.id = parseInt(req.params.activityId);
@@ -65,4 +66,4 @@ router.patch("/:activityId", async (req, res, next) => {
   }
 });
 
-module.exports = router;
+module.exports = activitiesRouter;

@@ -1,6 +1,9 @@
 /* eslint-disable no-useless-catch */
 const express = require("express");
-const router = express.Router();
+const usersRouter = express.Router();
+const { requireUser } = require("./utils");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = process.env;
 
 const {
   getUserByUsername,
@@ -9,12 +12,12 @@ const {
   getPublicRoutinesByUser,
 } = require("../db");
 
-router.use((req, res, next) => {
+usersRouter.use((req, res, next) => {
   next();
 });
 
 // POST /api/users/register
-router.post("/register", async (req, res, next) => {
+usersRouter.post("/register", async (req, res, next) => {
   const { username, password } = req.body;
 
   if (password.length < 8) {
@@ -27,28 +30,31 @@ router.post("/register", async (req, res, next) => {
   }
 
   try {
-    const user = await getUserByUsername(username);
+    const _user = await getUserByUsername(username);
     // Check to see if username is already taken
-    if (user) {
+    if (_user) {
       next(console.log("That username is already taken!"));
       return;
     }
 
-    const result = await createUser({
+    const user = await createUser({
       username,
       password,
     });
-    console.log("Registration result: ", result);
-    res.send({
-      message: "User Registered!",
-    });
+    console.log("Registration result: ", user);
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      JWT_SECRET,
+      { expiresIn: "1w" }
+    );
+    res.send({ user, message: "Registration successful!", token });
   } catch (error) {
     next(error);
   }
 });
 
 // POST /api/users/login
-router.post("/login", async (req, res, next) => {
+usersRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
 
   // Check to ensure both username and password are there
@@ -63,15 +69,21 @@ router.post("/login", async (req, res, next) => {
     if (!user) {
       next(console.log("Username does not exist!"));
       return;
+    } else {
+      const token = jwt.sign(
+        { id: user.id, username: user.username },
+        JWT_SECRET,
+        { expiresIn: "1w" }
+      );
+      res.send({ user, message: "Successful Login!", token });
     }
-    res.send({ message: "Successful Login!" });
   } catch (error) {
     next(console.log("Incorrect password!"));
   }
 });
 
 // GET /api/users/me
-router.get("/me", async (req, res, next) => {
+usersRouter.get("/me", requireUser, async (req, res, next) => {
   try {
     const userMe = await getUser(req.params);
 
@@ -82,7 +94,7 @@ router.get("/me", async (req, res, next) => {
 });
 
 // GET /api/users/:username/routines
-router.get("/:username/routines", async (req, res, next) => {
+usersRouter.get("/:username/routines", requireUser, async (req, res, next) => {
   try {
     const userRoutines = await getPublicRoutinesByUser(req.params);
 
@@ -92,4 +104,4 @@ router.get("/:username/routines", async (req, res, next) => {
   }
 });
 
-module.exports = router;
+module.exports = usersRouter;
